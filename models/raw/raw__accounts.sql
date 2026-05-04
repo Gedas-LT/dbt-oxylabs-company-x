@@ -1,3 +1,3 @@
 SELECT
     *
-FROM {{ ref('accounts')}}
+FROM {{ ref('accounts') }}
