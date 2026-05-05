@@ -1,21 +1,96 @@
-
-version: 2
+version: 1
 
 models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
+  - name: stg__accounts
+    description: "Primary information about signed up accounts."
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: account_id
+        description: "Unique identifier/Primary key for the account."
         data_tests:
-          - unique
           - not_null
+          - unique
+      - name: account_name
+      - name: industry
+        description: "Industry where the account operates."
+      - name: country
+        description: "Origin country of the account."
+      - name: signup_date
+        description: "Date when the account was created."
+      - name: referral source
+        description: "Source from where the account was signed up."
+      - name: plan_tier
+        description: "Current plan tier of the account."
+      - name: seats
+        description: "Number of available seats for the account."
+      - name: is_trial
+        description: "Indicates if account current is in the trial."
+      - name: churn_flag
+        description: "Indicates if account is churned."
 
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
+  - name: stg__churn_events
+    description: "Primary information about churn events."
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: churn_event_id
+        description: "Unique identifier/Primary key for the churn events."
         data_tests:
-          - unique
           - not_null
+          - unique
+      - name: account_id
+        description: "Foreign key for the churned account."
+        data_tests:
+          - not_null
+          - unique
+      - name: churn_date
+        description: "Date of churn events."
+      - name: reason_code
+        description: "Short sentence about the reason of churn event."
+      - name: refund_amount_usd
+        description: "The amount that was refunded after the churn event."
+      - name: preceding_upgrade_flag
+        description: "Indicates "
+      - name: preceding_downgrade_flag
+      - name: is_reactivation
+      - name: feedback_text
+
+  - name: stg__feature_usage
+    description: ""
+    columns:
+      - name: usage_id
+      - name: subscription_id
+      - name: usage_date
+      - name: feature_name
+      - name: usage_count
+      - name: usage_duration_secs
+      - name: error_count
+      - name: is_beta_feature
+
+  - name: stg__subscriptions
+    description: ""
+    columns:
+      - name: subscription_id
+      - name: account_id
+      - name: start_date
+      - name: end_date
+      - name: plan_tier
+      - name: seats
+      - name: mrr_amount
+      - name: arr_amount
+      - name: is_trial
+      - name: upgrade_flag
+      - name: downgrade_flag
+      - name: churn_flag
+      - name: billing_frequency
+      - name: auto_renew_flag
+
+  - name: stg__support_tickets
+    description: ""
+    columns:
+      - name: ticket_id
+      - name: account_id
+      - name: submitted_at
+      - name: closed_at
+      - name: resolution_time_hours
+      - name: priority
+      - name: first_response_time_minutes
+      - name: satisfaction_score
+      - name: escalation_flag

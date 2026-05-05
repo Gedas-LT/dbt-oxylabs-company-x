@@ -1,0 +1,48 @@
+version: 1
+
+models:
+  - name: fact_monthly_subscription_mrr
+    description: "MRR amount of every subscription expanded through all active months."
+    columns:
+      - name: month
+        description: "Active month"
+      - name: subscription_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: mrr_amount
+        description: ""
+      - name: upgrade_flag
+        description: ""
+      - name: downgrade_flag
+        description: ""
+
+  - name: fact_monthly_account_mrr
+    description: "MRR amount of every account expanded through all active months."
+    columns:
+      - name: month
+        description: "Active month"
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: current_mrr
+        description: ""
+      - name: active_subscription_count
+        description: ""
+
+  - name: fact_monthly_account_refund
+    description: "Monthly amount that was refunded to every account in the event of churn."
+    columns:
+      - name: month
+        description: ""
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: refund_amount
+        description: ""
