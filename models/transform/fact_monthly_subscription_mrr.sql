@@ -13,12 +13,15 @@ months_sequence AS (
 ),
 active_months AS (
 	SELECT
-		months.month_start AS month,
+		months.month_start AS active_month,
 		subs.subscription_id,
 		subs.account_id,
 		subs.mrr_amount,
 		subs.upgrade_flag,
-		subs.downgrade_flag
+		subs.downgrade_flag,
+		subs.churn_flag,
+		subs.start_date,
+		subs.end_date
 	FROM months_sequence AS months
 	INNER JOIN {{ ref('stg__subscriptions') }} AS subs
 		ON subs.start_date <= months.month_end

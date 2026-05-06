@@ -4,8 +4,10 @@ models:
   - name: fact_monthly_subscription_mrr
     description: "MRR amount of every subscription expanded through all active months."
     columns:
-      - name: month
-        description: "Active month"
+      - name: active_month
+        description: ""
+        data_tests:
+          - not_null
       - name: subscription_id
         description: ""
         data_tests:
@@ -17,15 +19,61 @@ models:
       - name: mrr_amount
         description: ""
       - name: upgrade_flag
-        description: ""
+        description: "Flag from the original subscription row. It is not monthly movement event by itself."
       - name: downgrade_flag
+        description: "Flag from the original subscription row. It is not monthly movement event by itself."
+      - name: churn_flag
+        description: "Flag from the original subscription row. It is not monthly movement event by itself."
+      - name: start_date
         description: ""
-
+      - name: end_date
+        description: ""
+  
+  - name: int_subscription_mrr_movements
+    description: "Individual subscriptions with MRR movements types over all active months."
+    columns:
+      - name: active_month
+        description: ""
+        data_tests:
+          - not_null
+      - name: subscription_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: previous_mrr
+        description: ""
+      - name: current_mrr
+        description: ""
+      - name: mrr_movement
+        description: ""
+      - name: source_upgrade_flag
+        description: ""
+      - name: source_downgrade_flag
+        description: ""
+      - name: source_churn_flag
+        description: ""
+      - name: start_date
+        description: ""
+      - name: end_date
+        description: ""
+      - name: is_first_active_month
+        description: ""
+      - name: is_churn_month
+        description: ""
+      - name: is_positive_mrr_movement
+        description: ""
+      - name: is_negative_mrr_movement
+        description: ""
+      - name: mrr_movement_type
+        description: ""
+  
   - name: fact_monthly_account_mrr
     description: "MRR amount of every account expanded through all active months."
     columns:
-      - name: month
-        description: "Active month"
+      - name: active_month
+        description: ""
+        data_tests:
+          - not_null
       - name: account_id
         description: ""
         data_tests:
@@ -35,14 +83,40 @@ models:
       - name: active_subscription_count
         description: ""
 
-  - name: fact_monthly_account_refund
-    description: "Monthly amount that was refunded to every account in the event of churn."
+  - name: int_account_mrr_with_previous_month
+    description: "MRR amount movement of every account expanded through all active months."
     columns:
-      - name: month
+      - name: active_month
         description: ""
+        data_tests:
+          - not_null
       - name: account_id
         description: ""
         data_tests:
           - not_null
-      - name: refund_amount
+      - name: current_mrr
+        description: ""
+      - name: previous_mrr
+        description: ""
+      - name: mrr_movement
+        description: ""
+      - name: active_subscription_count
+        description: ""
+      - name: had_mrr_before
+        description: ""
+
+  - name: fact_monthly_churn_events
+    description: "Monthly total churn events and refunded amount grouped by account."
+    columns:
+      - name: churn_month
+        description: ""
+        data_tests:
+          - not_null
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: churn_event_count
+        description: ""
+      - name: refund_amount_usd
         description: ""

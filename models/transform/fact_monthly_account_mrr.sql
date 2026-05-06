@@ -1,11 +1,11 @@
 WITH monthly_account_mrr AS (
     SELECT
-        month,
+        active_month,
         account_id,
         SUM(mrr_amount) AS current_mrr,
         COUNT(DISTINCT subscription_id) AS active_subscription_count
     FROM {{ ref('fact_monthly_subscription_mrr') }}
-    GROUP BY month, account_id
+    GROUP BY active_month, account_id
 )
 
 SELECT
