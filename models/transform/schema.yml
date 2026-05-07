@@ -1,23 +1,23 @@
-version: 1
+version: 2
 
 models:
   - name: fact_monthly_subscription_mrr
-    description: "MRR amount of every subscription expanded through all active months."
+    description: "Monthly subscription-level MRR fact table. Each row represents one subscription that was active at month end."
     columns:
       - name: active_month
-        description: ""
+        description: "Calendar month for the MRR snapshot, represented as the first day of the month."
         data_tests:
           - not_null
       - name: subscription_id
-        description: ""
+        description: "Unique identifier of the subscription."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account that owns the subscription."
         data_tests:
           - not_null
       - name: mrr_amount
-        description: ""
+        description: "Monthly recurring revenue contributed by the subscription for the active month."
       - name: upgrade_flag
         description: "Flag from the original subscription row. It is not monthly movement event by itself."
       - name: downgrade_flag
@@ -25,148 +25,148 @@ models:
       - name: churn_flag
         description: "Flag from the original subscription row. It is not monthly movement event by itself."
       - name: start_date
-        description: ""
+        description: "Date when the subscription became active."
       - name: end_date
-        description: ""
+        description: "Date when the subscription ended. Null values indicate the subscription is still active."
   
   - name: int_subscription_mrr_movements
-    description: "Individual subscriptions with MRR movements types over all active months."
+    description: "Intermediate model that compares each subscription's current-month MRR to previous-month MRR and classifies subscription-level movements."
     columns:
       - name: active_month
-        description: ""
+        description: "Calendar month of the subscription MRR movement, represented as the first day of the month."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account that owns the subscription."
         data_tests:
           - not_null
       - name: subscription_id
-        description: ""
+        description: "Unique identifier of the subscription."
         data_tests:
           - not_null
       - name: previous_subscription_mrr
-        description: ""
+        description: "Subscription MRR in the previous month."
       - name: current_subscription_mrr
-        description: ""
+        description: "Subscription MRR in the current month."
       - name: subscription_mrr_movement
-        description: ""
+        description: "Change in subscription MRR between the previous and current month."
       - name: source_upgrade_flag
-        description: ""
+        description: "Original upgrade flag from the subscription source data. Used as context for movement classification."
       - name: source_downgrade_flag
-        description: ""
+        description: "Original downgrade flag from the subscription source data. Used as context for movement classification."
       - name: source_churn_flag
-        description: ""
+        description: "Original churn flag from the subscription source data. Used as context for movement classification."
       - name: start_date
-        description: ""
+        description: "Date when the subscription became active."
       - name: end_date
-        description: ""
+        description: "Date when the subscription ended. Null values indicate the subscription is still active."
       - name: is_first_active_month
-        description: ""
+        description: "Boolean flag indicating whether this is the first month where the subscription has positive MRR."
       - name: is_subscription_churn_month
-        description: ""
+        description: "Boolean flag indicating whether this is the month where subscription MRR changed from positive to zero."
       - name: is_positive_mrr_movement
-        description: ""
+        description: "Boolean flag indicating whether subscription MRR increased compared with the previous month."
       - name: is_negative_mrr_movement
-        description: ""
+        description: "Boolean flag indicating whether subscription MRR decreased compared with the previous month."
       - name: subscription_movement_type
-        description: ""
+        description: "Subscription-level movement classification, such as new_subscription, upgrade, downgrade, subscription_churn, or retained."
   
   - name: fact_monthly_account_mrr
-    description: "MRR amount of every account expanded through all active months."
+    description: "Monthly account-level MRR fact table. Each row represents one account's total MRR for a month, calculated by summing active subscription MRR."
     columns:
       - name: active_month
-        description: ""
+        description: "Calendar month of the account MRR snapshot, represented as the first day of the month."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account."
         data_tests:
           - not_null
       - name: current_mrr
-        description: ""
+        description: "Total monthly recurring revenue for the account in the current month."
       - name: active_subscription_count
-        description: ""
+        description: "Number of active subscriptions contributing MRR to the account in the current month."
 
   - name: int_account_mrr_with_previous_month
-    description: "MRR amount movement of every account expanded through all active months."
+    description: "Intermediate account-month model that adds previous month MRR and account MRR movement to support lifecycle and waterfall classification."
     columns:
       - name: active_month
-        description: ""
+        description: "Calendar month of the account MRR snapshot, represented as the first day of the month."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account."
         data_tests:
           - not_null
       - name: current_mrr
-        description: ""
+        description: "Total account MRR in the current month."
       - name: previous_mrr
-        description: ""
+        description: "Total account MRR in the previous month."
       - name: net_mrr_movement
-        description: ""
+        description: "Net change in account MRR between the previous and current month."
       - name: active_subscription_count
-        description: ""
+        description: "Number of active subscriptions contributing MRR to the account in the current month."
       - name: had_mrr_before
-        description: ""
+        description: "Flag indicating whether the account had positive MRR before the current month."
 
   - name: fact_monthly_churn_events
-    description: "Monthly total churn events and refunded amount grouped by account."
+    description: "Monthly account-level churn events fact table. Each row summarizes churn event count and refund amount for an account in a month."
     columns:
       - name: churn_month
-        description: ""
+        description: "Calendar month of the churn event, represented as the first day of the month."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account associated with the churn event."
         data_tests:
           - not_null
       - name: churn_event_count
-        description: ""
+        description: "Number of churn events recorded for the account in the month."
       - name: refund_amount_usd
-        description: ""
+        description: "Total refund amount in USD associated with churn events for the account in the month."
 
   - name: int_mrr_movements
-    description: "Detailed account MRR movements combined with subscription-level MRR changes."
+    description: "Intermediate MRR movement model that combines account-level lifecycle logic with subscription-level MRR movements and churn refund context."
     columns:
       - name: active_month
-        description: ""
+        description: "Calendar month of the MRR movement, represented as the first day of the month."
         data_tests:
           - not_null
       - name: account_id
-        description: ""
+        description: "Unique identifier of the account."
         data_tests:
           - not_null
       - name: subscription_id
-        description: ""
+        description: "Unique identifier of the subscription related to the movement. Null for retained MRR rows."
       - name: previous_mrr
-        description: ""
+        description: "Total account MRR in the previous month."
       - name: current_mrr
-        description: ""
+        description: "Total account MRR in the current month."
       - name: account_mrr_movement
-        description: ""
+        description: "Net change in account MRR between the previous and current month."
       - name: active_subscription_count
-        description: ""
+        description: "Number of active subscriptions contributing MRR to the account in the current month."
       - name: had_mrr_before
-        description: ""
+        description: "Flag indicating whether the account had positive MRR before the current month."
       - name: account_lifecycle_type
-        description: ""
+        description: "Account-level lifecycle classification for the month."
       - name: movement_type
-        description: ""
+        description: "Final MRR movement category used in the revenue waterfall."
       - name: subscription_mrr_movement
-        description: ""
+        description: "MRR amount associated with the movement row. For retained rows, this represents retained MRR volume rather than an actual MRR change."
       - name: source_upgrade_flag
-        description: ""
+        description: "Original upgrade flag from the subscription source data."
       - name: source_downgrade_flag
-        description: ""
+        description: "Original downgrade flag from the subscription source data."
       - name: source_churn_flag
-        description: ""
+        description: "Original churn flag from the subscription source data."
       - name: is_first_active_month
-        description: ""
+        description: "Boolean flag indicating whether this is the first month where the subscription has positive MRR."
       - name: is_subscription_churn_month
-        description: ""
+        description: "Boolean flag indicating whether this is the month where subscription MRR changed from positive to zero."
       - name: is_mrr_movement
-        description: ""
+        description: "Boolean flag indicating whether the row should be included in waterfall movement calculations."
       - name: churn_event_count
-        description: ""
+        description: "Number of churn events associated with the account and month."
       - name: refund_amount_usd
-        description: ""
+        description: "Total refund amount in USD associated with churn events for the account and month."

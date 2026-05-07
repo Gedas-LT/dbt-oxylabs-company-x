@@ -1,8 +1,8 @@
 ## Project overview
 
-This dbt project builds a monthly MRR revenue waterfall for Company X. The goal is to help the CFO and analysts to understand how recurring revenue changes from one month to the next.
+This dbt project builds a monthly MRR revenue waterfall for Company X. The goal is to help the CFO and analysts understand how recurring revenue changes from one month to the next.
 
-The final reporting model explains monthly MRR movement accross categories such as:
+The final reporting model explains monthly MRR movements across categories such as:
 
 - new account
 - returned
@@ -27,6 +27,6 @@ The subscriptions source contains flags: upgrade_flag, downgrade_flag, churn_fla
 
 The project calculates MRR movements using a hybrid account-level and subscription-level approach.
 
-The waterfall is reported at account/month level, but movement classification uses subscription-level chnages to explain what happened inside each account.
+The waterfall is reported at account/month level, but movement classification uses subscription-level changes to explain what happened inside each account.
 
 This is important because one account can have multiple subscriptions. For example, an account could have one subscription upgrade and another subscription churn in the same month. A pure account-level comparison could hide those offsetting movements.
