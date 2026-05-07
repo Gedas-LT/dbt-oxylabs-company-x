@@ -5,9 +5,4 @@ logs/
 *.duckdb
 *.duckdb.wal
 .env
-seeds/accounts.csv
 .gitignore
-seeds/churn_events.csv
-seeds/feature_usage.csv
-seeds/subscriptions.csv
-seeds/support_tickets.csv

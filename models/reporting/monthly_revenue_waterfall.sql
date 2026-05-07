@@ -56,7 +56,7 @@ final_output AS (
         moves.month_id,
         CASE moves.movement_type 
             WHEN 'new_account' THEN 1
-            WHEN 'reactivation' THEN 2
+            WHEN 'returned' THEN 2
             WHEN 'new_subscription' THEN 3
             WHEN 'upgrade' THEN 4
             WHEN 'downgrade' THEN 5
