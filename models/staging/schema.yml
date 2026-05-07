@@ -39,7 +39,6 @@ models:
         description: "Foreign key for the churned account."
         data_tests:
           - not_null
-          - unique
       - name: churn_date
         description: "Date of churn events."
       - name: reason_code

@@ -1,7 +1,7 @@
 WITH date_bounds AS (
 	SELECT
 		CAST(DATE_TRUNC('MONTH', MIN(start_date)) AS DATE) AS start_month,
-		CAST(DATE_TRUNC('MONTH', CURRENT_DATE()) AS DATE) AS max_month
+		CAST(DATE_TRUNC('MONTH', MAX(start_date)) AS DATE) AS max_month
     FROM {{ ref('stg__subscriptions') }}
 ),
 months_sequence AS (
