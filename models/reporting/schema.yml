@@ -1,0 +1,30 @@
+version: 1
+
+models:
+  - name: monthly_revenue_waterfall
+    description: "Monthly MRR waterfall showing how recurring revenue changes by movement type."
+    columns:
+      - name: month_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: movement_type
+        data_tests:
+          - not_null
+        description: ""
+      - name: account_count
+        description: "Number of distinct accounts contributing to the movement type."
+      - name: mrr_movement
+        description: "Total MRR amount associated with the movement_type."
+      - name: mrr_change_amount
+        description: "Actual MRR change amount used for waterfall."
+      - name: starting_mrr
+        description: ""
+      - name: ending_mrr
+        description: ""
+      - name: total_account_mrr_movement
+        description: "Net account-level MRR change."
+      - name: churn_event_count
+        description: ""
+      - name: refund_amount_usd
+        description: "Total refund amount ins USD associated with churn events."

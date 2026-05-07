@@ -27,3 +27,7 @@ models:
     transform:
       +schema: transform
       +materialized: table
+
+    reporting:
+      +schema: reporting
+      +materialized: table
