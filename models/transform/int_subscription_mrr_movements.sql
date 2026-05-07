@@ -27,7 +27,7 @@ subscription_month_combinations AS (
 mrr_filled AS (
     SELECT
         comb.*,
-        COALESCE(mrr.mrr_amount, 0) AS current_mrr,
+        COALESCE(mrr.mrr_amount, 0) AS current_subscription_mrr,
         COALESCE(mrr.upgrade_flag, FALSE) AS source_upgrade_flag,
         COALESCE(mrr.downgrade_flag, FALSE) AS source_downgrade_flag,
         COALESCE(mrr.churn_flag, FALSE) AS source_churn_flag,
@@ -41,53 +41,54 @@ mrr_filled AS (
 with_previous_month AS (
     SELECT
         *,
-        LAG(current_mrr) OVER (
+        LAG(current_subscription_mrr) OVER (
             PARTITION BY subscription_id
             ORDER BY active_month
-        ) AS previous_mrr
+        ) AS previous_subscription_mrr
     FROM mrr_filled
 ),
 classified AS (
     SELECT
         active_month,
+        account_id,
         subscription_id,
-        previous_mrr,
-        current_mrr,
-        current_mrr - previous_mrr AS mrr_movement,
+        previous_subscription_mrr,
+        current_subscription_mrr,
+        current_subscription_mrr - previous_subscription_mrr AS subscription_mrr_movement,
         source_upgrade_flag,
         source_downgrade_flag,
         source_churn_flag,
         start_date,
         end_date,
         CASE
-            WHEN previous_mrr = 0 AND current_mrr > 0 THEN TRUE
+            WHEN previous_subscription_mrr = 0 AND current_subscription_mrr > 0 THEN TRUE
             ELSE FALSE
         END AS is_first_active_month,
         CASE
-            WHEN previous_mrr > 0 AND current_mrr = 0 THEN TRUE
+            WHEN previous_subscription_mrr > 0 AND current_subscription_mrr = 0 THEN TRUE
             ELSE FALSE
-        END AS is_churn_month,
+        END AS is_subscription_churn_month,
         CASE
-            WHEN current_mrr > previous_mrr THEN TRUE
+            WHEN current_subscription_mrr > previous_subscription_mrr THEN TRUE
             ELSE FALSE
         END AS is_positive_mrr_movement,
         CASE
-            WHEN current_mrr < previous_mrr THEN TRUE
+            WHEN current_subscription_mrr < previous_subscription_mrr THEN TRUE
             ELSE FALSE
         END AS is_negative_mrr_movement,
         CASE
-            WHEN previous_mrr = 0 AND current_mrr > 0 AND source_upgrade_flag = TRUE THEN 'upgrade'
-            WHEN previous_mrr = 0 AND current_mrr > 0 THEN 'new'
-            WHEN previous_mrr > 0 AND current_mrr = 0 THEN 'churn'
-            WHEN current_mrr > previous_mrr THEN 'upgrade'
-            WHEN current_mrr < previous_mrr THEN 'downgrade'
-            WHEN current_mrr = previous_mrr AND current_mrr > 0 THEN 'retained'
+            WHEN previous_subscription_mrr = 0 AND current_subscription_mrr > 0 AND source_upgrade_flag = TRUE THEN 'upgrade'
+            WHEN previous_subscription_mrr = 0 AND current_subscription_mrr > 0 THEN 'new_subscription'
+            WHEN previous_subscription_mrr > 0 AND current_subscription_mrr = 0 THEN 'subscription_churn'
+            WHEN current_subscription_mrr > previous_subscription_mrr THEN 'upgrade'
+            WHEN current_subscription_mrr < previous_subscription_mrr THEN 'downgrade'
+            WHEN current_subscription_mrr = previous_subscription_mrr AND current_subscription_mrr > 0 THEN 'retained'
             ELSE 'no_mrr'
-        END AS mrr_movement_type
+        END AS subscription_movement_type
     FROM with_previous_month
 )
 
 SELECT
     *
 FROM classified
-WHERE mrr_movement_type != 'no_mrr'
+WHERE subscription_movement_type != 'no_mrr'

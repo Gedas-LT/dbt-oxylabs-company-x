@@ -57,7 +57,7 @@ final_output AS (
         account_id,
         current_mrr,
         previous_mrr,
-        current_mrr - previous_mrr AS mrr_movement,
+        current_mrr - previous_mrr AS net_mrr_movement,
         active_subscription_count,
         COALESCE(had_mrr_before, 0) AS had_mrr_before
     FROM with_previous_month

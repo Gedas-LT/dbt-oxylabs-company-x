@@ -36,15 +36,19 @@ models:
         description: ""
         data_tests:
           - not_null
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
       - name: subscription_id
         description: ""
         data_tests:
           - not_null
-      - name: previous_mrr
+      - name: previous_subscription_mrr
         description: ""
-      - name: current_mrr
+      - name: current_subscription_mrr
         description: ""
-      - name: mrr_movement
+      - name: subscription_mrr_movement
         description: ""
       - name: source_upgrade_flag
         description: ""
@@ -58,13 +62,13 @@ models:
         description: ""
       - name: is_first_active_month
         description: ""
-      - name: is_churn_month
+      - name: is_subscription_churn_month
         description: ""
       - name: is_positive_mrr_movement
         description: ""
       - name: is_negative_mrr_movement
         description: ""
-      - name: mrr_movement_type
+      - name: subscription_movement_type
         description: ""
   
   - name: fact_monthly_account_mrr
@@ -98,7 +102,7 @@ models:
         description: ""
       - name: previous_mrr
         description: ""
-      - name: mrr_movement
+      - name: net_mrr_movement
         description: ""
       - name: active_subscription_count
         description: ""
@@ -116,6 +120,54 @@ models:
         description: ""
         data_tests:
           - not_null
+      - name: churn_event_count
+        description: ""
+      - name: refund_amount_usd
+        description: ""
+
+  - name: int_mrr_movements
+    description: "Detailed account MRR movements combined with subscription-level MRR changes."
+    columns:
+      - name: active_month
+        description: ""
+        data_tests:
+          - not_null
+      - name: account_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: subscription_id
+        description: ""
+        data_tests:
+          - not_null
+      - name: previous_mrr
+        description: ""
+      - name: current_mrr
+        description: ""
+      - name: account_mrr_movement
+        description: ""
+      - name: active_subscription_count
+        description: ""
+      - name: had_mrr_before
+        description: ""
+      - name: account_lifecycle_type
+        description: ""
+      - name: movement_type
+        description: ""
+      - name: subscription_mrr_movement
+        description: ""
+      - name: source_upgrade_flag
+        description: ""
+      - name: source_downgrade_flag
+        description: ""
+      - name: source_churn_flag
+        description: ""
+      - name: is_first_active_month
+        description: ""
+      - name: is_subscription_churn_month
+        description: ""
+      - name: is_mrr_movement
+        description: ""
       - name: churn_event_count
         description: ""
       - name: refund_amount_usd
